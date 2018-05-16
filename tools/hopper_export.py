@@ -35,8 +35,11 @@ if save_loc is not None:
             elif type == Segment.TYPE_UNICODE:
                 objects.append(CodeObject('WSTR', label_name, addr, length))
             elif type == Segment.TYPE_PROCEDURE:
-                objects.append(CodeObject('FUNC', label_name, addr, length))
                 proc = seg.getProcedureAtAddress(addr)
+                maxAddr = addr
+                for bb in proc.basicBlockIterator():
+                    maxAddr = max(maxAddr, bb.getEndingAddress())
+                objects.append(CodeObject('FUNC', label_name, addr, maxAddr - addr + length))
                 for lvar in proc.getLocalVariableList():
                     if not lvar.name().startswith('var_') and not lvar.name().startswith('arg_'):
                         objects.append(CodeObject('LVAR', lvar.name(), addr, lvar.displacement()))
