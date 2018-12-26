@@ -41,7 +41,7 @@ if save_loc is not None:
                     maxAddr = max(maxAddr, bb.getEndingAddress())
                 objects.append(CodeObject('FUNC', label_name, addr, maxAddr - addr + length))
                 for lvar in proc.getLocalVariableList():
-                    if not lvar.name().startswith('var_') and not lvar.name().startswith('arg_'):
+                    if lvar.name() is not None and not lvar.name().startswith('var_') and not lvar.name().startswith('arg_'):
                         objects.append(CodeObject('LVAR', lvar.name(), addr, lvar.displacement()))
         for addr in range(seg.getStartingAddress(), seg.getStartingAddress() + seg.getLength()):
             comm = seg.getInlineCommentAtAddress(addr)
